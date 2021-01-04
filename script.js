@@ -58,6 +58,7 @@ function updateDOM() {
 
 function updateCountdown(e) {
   e.preventDefault();
+  // Set title and date, save to localStorage
   countdownTitle = e.srcElement[0].value;
   countdownDate = e.srcElement[1].value;
   savedCountdown = {
@@ -65,27 +66,31 @@ function updateCountdown(e) {
     date: countdownDate,
   };
   localStorage.setItem('countdown', JSON.stringify(savedCountdown));
-
+  // Check if no date entered
   if (countdownDate === '') {
     alert('Please select a date for the countdown.');
   } else {
+    // Get number version of current Date, updateDOM
     countdownValue = new Date(countdownDate).getTime();
     updateDOM();
   }
 }
 
 function reset() {
+  // Hide countdowns, show input form
   countdownEl.hidden = true;
   completeEl.hidden = true;
   inputContainer.hidden = false;
+  // Stop the countdown
   clearInterval(countdownActive);
-
+  // Reset values, remove localStorage item
   countdownTitle = '';
   countdownDate = '';
   localStorage.removeItem('countdown');
 }
 
 function restorePreviousCountdown() {
+  // Get countdown from localStorage if available
   if (localStorage.getItem('countdown')) {
     inputContainer.hidden = true; 
     savedCountdown = JSON.parse(localStorage.getItem('countdown'));
@@ -96,8 +101,10 @@ function restorePreviousCountdown() {
   }
 }
 
-
+// Event Listener
 countdownForm.addEventListener('submit', updateCountdown);
 countdownBtn.addEventListener('click', reset);
 completeBtn.addEventListener('click', reset);
+
+// On Load, check localStorage
 restorePreviousCountdown();
